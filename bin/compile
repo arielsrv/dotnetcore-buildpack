@@ -73,6 +73,8 @@ echo "Debugging info ..."
 echo $BUILD_CONFIGURATION
 echo $BUILD_DIR
 echo $OUTPUT_DIR
+echo $HOME
+echo "List ..."
 ls
 echo "End ..."
 
@@ -82,7 +84,7 @@ if [ -f ${BUILD_DIR}/Procfile ]; then
 else
 	echo "Add web process to Procfile" | indent
 	cat << EOT >> ${BUILD_DIR}/Procfile
-web: cd \$HOME/heroku_output && ../newrelic/usr/local/newrelic-dotnet-agent/run.sh dotnet "./${PROJECT_NAME}.dll"
+web: cd \$HOME/heroku_output && $HOME/newrelic/usr/local/newrelic-dotnet-agent/run.sh dotnet "./${PROJECT_NAME}.dll"
 EOT
 fi
 
