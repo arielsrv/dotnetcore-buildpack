@@ -84,7 +84,7 @@ if [ -f ${BUILD_DIR}/Procfile ]; then
 else
 	echo "Add web process to Procfile" | indent
 	cat << EOT >> ${BUILD_DIR}/Procfile
-web: cd \$HOME/heroku_output && $HOME/newrelic/usr/local/newrelic-dotnet-agent/run.sh dotnet "./${PROJECT_NAME}.dll"
+web: cd \$HOME/heroku_output && chmod +x $HOME/newrelic/usr/local/newrelic-dotnet-agent/run.sh && $HOME/newrelic/usr/local/newrelic-dotnet-agent/run.sh dotnet "./${PROJECT_NAME}.dll"
 EOT
 fi
 
