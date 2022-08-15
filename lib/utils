@@ -12,8 +12,8 @@ function info() {
 function indent() {
   c='s/^/       /'
   case $(uname) in
-    Darwin) sed -l "$c";;
-    *)      sed -u "$c";;
+  Darwin) sed -l "$c" ;;
+  *) sed -u "$c" ;;
   esac
 }
 
@@ -39,11 +39,16 @@ function install_dotnet() {
     local DOTNET_RUNTIME_DOWNLOAD_URL=https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_RUNTIME_VERSION/dotnet-runtime-$DOTNET_RUNTIME_VERSION-linux-x64.tar.gz
     curl -sSL ${DOTNET_RUNTIME_DOWNLOAD_URL} | tar xz -C ${DOTNET_CACHE_LOCATION}/runtime
   fi
-  
+
   topic "Export dotnet to Path"
   export PATH="${DOTNET_CACHE_LOCATION}/sdk:$PATH"
   mkdir -p ${BUILD_DIR}/.heroku/dotnet
   cp -r ${DOTNET_CACHE_LOCATION}/runtime ${BUILD_DIR}/.heroku/dotnet
+
+  echo "Downloading and installing NewRelic v10.0.0"
+  curl -sSL -o $CACHE_DIR/newrelic_agent.deb https://download.newrelic.com/dot_net_agent/previous_releases/10.0.0/newrelic-dotnet-agent_10.0.0_amd64.deb
+  dpkg -x $CACHE_DIR/newrelic_agent.deb "$BUILD_DIR/newrelic/"
+  echo "NewRelic installed in $BUILD_DIR/newrelic/"
 }
 
 export_env_dir() {
@@ -54,7 +59,7 @@ export_env_dir() {
     if [ -d "$env_dir" ]; then
       for e in $(ls $env_dir); do
         echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
-        export "$e=$(cat $env_dir/$e)"
+          export "$e=$(cat $env_dir/$e)"
         :
       done
     fi
